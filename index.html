@@ -920,6 +920,11 @@ function exportCalendar() {
       "ACTION:DISPLAY",
       `DESCRIPTION:${icsEscape("Time for " + task.name)}`,
       "END:VALARM",
+      "BEGIN:VALARM",
+      `TRIGGER:PT${duration}M`,
+      "ACTION:DISPLAY",
+      `DESCRIPTION:${icsEscape("Done? Mark " + task.name + " complete in SpineGuard")}`,
+      "END:VALARM",
       "END:VEVENT"
     ].join("\r\n");
   }).join("\r\n");
