@@ -139,6 +139,7 @@ button { font: inherit; }
 .smart-card.now { border-color: var(--red); }
 .smart-card.coming { border-color: var(--amber); }
 .smart-card.done { border-color: var(--green); }
+.smart-card.expired { border-color: var(--amber); }
 .smart-head {
   display: flex;
   align-items: center;
@@ -150,6 +151,7 @@ button { font: inherit; }
 .smart-card.now .smart-head { background: var(--red); }
 .smart-card.coming .smart-head { background: var(--amber); }
 .smart-card.done .smart-head { background: var(--green); }
+.smart-card.expired .smart-head { background: var(--amber); }
 .pulse {
   width: 8px;
   height: 8px;
@@ -157,7 +159,7 @@ button { font: inherit; }
   background: rgba(255,255,255,.82);
   animation: pulse 1.3s ease-in-out infinite;
 }
-.smart-card.coming .pulse, .smart-card.done .pulse { animation: none; }
+.smart-card.coming .pulse, .smart-card.done .pulse, .smart-card.expired .pulse { animation: none; }
 @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(.72);opacity:.45} }
 .smart-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .1em; }
 .smart-time { margin-left: auto; font-size: 12px; font-weight: 800; opacity: .9; }
@@ -187,6 +189,7 @@ button { font: inherit; }
 }
 .now .done-button { border-color: var(--red); }
 .coming .done-button { border-color: var(--amber); }
+.expired .done-button { border-color: var(--amber); }
 .done-button.checked {
   color: #fff;
   border-color: var(--green);
@@ -632,8 +635,9 @@ const isDone = task => !!dayDone()[task.id];
 const isMissed = task => !isDone(task) && currentMinute() > taskMinute(task) + GRACE_MINUTES;
 const isActive = task => {
   const diff = currentMinute() - taskMinute(task);
-  return !isDone(task) && diff >= 0 && diff <= GRACE_MINUTES;
+  return !isDone(task) && diff >= 0 && diff < GRACE_MINUTES;
 };
+const expiredTask = () => TASKS.find(task => !isDone(task) && currentMinute() === taskMinute(task) + GRACE_MINUTES) || null;
 const futureTasks = () => TASKS.filter(task => !isDone(task) && currentMinute() < taskMinute(task));
 const nextFuture = () => futureTasks().sort((a, b) => taskMinute(a) - taskMinute(b))[0] || null;
 const activeTask = () => TASKS.find(isActive) || null;
@@ -678,6 +682,7 @@ function renderStatus() {
 function renderSmartCard() {
   const card = $("smart-card");
   const active = activeTask();
+  const expired = expiredTask();
   const next = nextFuture();
   const doneMap = dayDone();
 
@@ -699,6 +704,28 @@ function renderSmartCard() {
           <div class="task-desc">${active.desc}</div>
         </div>
         <button class="done-button" onclick="toggleTask('${active.id}')" aria-label="Mark ${active.name} done">✓</button>
+      </div>`;
+    renderNextStrip(after);
+    return;
+  }
+
+  if (expired) {
+    const after = taskAfter(expired);
+    card.className = "smart-card expired";
+    card.innerHTML = `
+      <div class="smart-head">
+        <span class="pulse"></span>
+        <span class="smart-label">Time's up</span>
+        <span class="smart-time">${expired.time}</span>
+      </div>
+      <div class="smart-body">
+        <div class="task-emoji">${expired.emoji}</div>
+        <div>
+          <div class="task-title">${expired.name}</div>
+          <div class="task-meta">${expired.duration} · mark it done if completed</div>
+          <div class="task-desc">If you already did it, tap the circle. Otherwise it will move to Missed.</div>
+        </div>
+        <button class="done-button" onclick="toggleTask('${expired.id}')" aria-label="Mark ${expired.name} done">✓</button>
       </div>`;
     renderNextStrip(after);
     return;
@@ -760,7 +787,7 @@ function renderLog() {
   const doneMap = dayDone();
   const done = TASKS.filter(task => doneMap[task.id]);
   const missed = TASKS.filter(isMissed);
-  const later = TASKS.filter(task => !doneMap[task.id] && !isMissed(task));
+  const later = TASKS.filter(task => !doneMap[task.id] && !isMissed(task) && taskMinute(task) > currentMinute());
 
   $("log-chips").innerHTML = `
     <span class="chip done">${done.length} done</span>
