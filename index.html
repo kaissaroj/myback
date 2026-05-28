@@ -276,6 +276,28 @@ button { font: inherit; }
   font-weight: 900;
 }
 .notify-button.hidden { display: none; }
+.calendar-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.calendar-button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  background: var(--green);
+  color: #fff;
+  padding: 13px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 900;
+}
+.calendar-note {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+}
 
 .panel { overflow: hidden; }
 .panel-head {
@@ -489,11 +511,26 @@ button { font: inherit; }
       </div>
     </section>
 
+    <section class="notify-card" id="calendar-card">
+      <div class="notify-top">
+        <div class="notify-icon">📅</div>
+        <div style="flex:1">
+          <div class="notify-title">Reliable iPhone alerts <span class="tag on">Best</span></div>
+          <div class="notify-desc">Export daily recovery tasks to Apple Calendar. These alerts work even when the PWA is closed.</div>
+          <div class="notify-steps">After download: open the calendar file → Add All → choose Calendar.</div>
+        </div>
+      </div>
+      <div class="calendar-actions">
+        <button class="calendar-button" onclick="exportCalendar()">Export Apple Calendar alerts</button>
+        <div class="calendar-note">Creates daily alerts for the major recovery tasks. Desk stand-up timer stays inside the app.</div>
+      </div>
+    </section>
+
     <section class="notify-card" id="notify-card">
       <div class="notify-top">
         <div class="notify-icon">🔔</div>
         <div style="flex:1">
-          <div class="notify-title">Reminders <span class="tag off" id="notify-tag">Off</span></div>
+          <div class="notify-title">Web reminders <span class="tag off" id="notify-tag">Off</span></div>
           <div class="notify-desc" id="notify-desc"></div>
           <div class="notify-steps" id="notify-steps"></div>
         </div>
@@ -841,6 +878,74 @@ function toggleStandTimer() {
       notify("SpineGuard", "30 minutes done. Stand and walk for 2 minutes.");
     }
   }, 1000);
+}
+
+function addMinutes(time, minutes) {
+  const [hour, minute] = time.split(":").map(Number);
+  const total = hour * 60 + minute + minutes;
+  return `${pad(Math.floor(total / 60) % 24)}${pad(total % 60)}00`;
+}
+
+function icsEscape(text) {
+  return String(text)
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\n/g, "\\n");
+}
+
+function formatIcsDate(date) {
+  return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`;
+}
+
+function exportCalendar() {
+  const startDate = formatIcsDate(new Date());
+  const created = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const calendarTasks = TASKS.filter(task => task.weight >= 2);
+  const events = calendarTasks.map(task => {
+    const start = task.time.replace(":", "") + "00";
+    const duration = Number.parseInt(task.duration, 10) || 10;
+    const end = addMinutes(task.time, duration);
+    return [
+      "BEGIN:VEVENT",
+      `UID:${task.id}@spineguard.local`,
+      `DTSTAMP:${created}`,
+      `DTSTART:${startDate}T${start}`,
+      `DTEND:${startDate}T${end}`,
+      "RRULE:FREQ=DAILY",
+      `SUMMARY:${icsEscape("SpineGuard: " + task.name)}`,
+      `DESCRIPTION:${icsEscape(task.desc)}`,
+      "BEGIN:VALARM",
+      "TRIGGER:PT0M",
+      "ACTION:DISPLAY",
+      `DESCRIPTION:${icsEscape("Time for " + task.name)}`,
+      "END:VALARM",
+      "END:VEVENT"
+    ].join("\r\n");
+  }).join("\r\n");
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "PRODID:-//SpineGuard//Recovery Calendar//EN",
+    "X-WR-CALNAME:SpineGuard Recovery",
+    "X-WR-TIMEZONE:Asia/Kathmandu",
+    events,
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "spineguard-recovery-calendar.ics";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+  toast("Calendar file exported", "ok");
 }
 
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
