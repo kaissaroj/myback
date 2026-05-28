@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0f1e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SpineGuard">
+<title>SpineGuard — Saroj's Recovery Tracker</title>
+<link rel="manifest" href="#" id="manifest-link">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg: #060b18;
+  --surface: #0d1628;
+  --surface2: #131f35;
+  --border: #1e3050;
+  --accent: #00d4ff;
+  --accent2: #ff6b35;
+  --accent3: #39ff14;
+  --warn: #ffbe0b;
+  --danger: #ff3860;
+  --text: #e8f4fd;
+  --muted: #5a7a9a;
+  --done: #39ff14;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate(0,0); }
+  to { transform: translate(10%, 15%); }
+}
+
+.app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 0 100px; }
+
+/* ── HEADER ── */
+.header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(0,212,255,0.05) 0%, transparent 100%);
+}
+
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+
+.app-name {
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.patient-name {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.patient-sub {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  margin-top: 2px;
+}
+
+.streak-badge {
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent2), #ff4500);
+  border-radius: 12px;
+  padding: 8px 14px;
+  min-width: 60px;
+}
+
+.streak-num { font-size: 24px; font-weight: 800; line-height: 1; }
+.streak-label { font-size: 9px; letter-spacing: 2px; opacity: 0.9; }
+
+/* ── CLOCK / CURRENT TASK ── */
+.hero-card {
+  margin: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  animation: shimmer 3s linear infinite;
+  background-size: 200%;
+}
+
+@keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+
+.now-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.clock-display {
+  font-family: 'Space Mono', monospace;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -2px;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(0,212,255,0.4);
+}
+
+.date-display {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.current-task-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent2);
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+  margin-bottom: 8px;
+}
+
+.current-task-card {
+  background: var(--surface2);
+  border: 1px solid var(--accent2);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.current-task-card:hover { background: rgba(255,107,53,0.1); }
+.current-task-card.done-state { border-color: var(--done); background: rgba(57,255,20,0.05); }
+
+.task-icon { font-size: 28px; flex-shrink: 0; }
+.task-info { flex: 1; }
+.task-name { font-size: 15px; font-weight: 700; }
+.task-time-range { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+.task-duration { font-size: 11px; color: var(--accent2); font-family: 'Space Mono', monospace; }
+
+.task-check {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--accent2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.task-check.checked {
+  background: var(--done);
+  border-color: var(--done);
+  box-shadow: 0 0 16px rgba(57,255,20,0.5);
+}
+
+.no-task {
+  text-align: center;
+  padding: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── PROGRESS ── */
+.progress-section { padding: 0 20px; margin-bottom: 16px; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+}
+
+.progress-stats {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(0,212,255,0.4);
+}
+
+/* ── TIMELINE ── */
+.timeline-section { padding: 0 20px; }
+
+.day-period {
+  margin-bottom: 20px;
+}
+
+.period-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.period-header.evening { border-left-color: var(--accent2); }
+.period-header.night { border-left-color: var(--accent3); }
+.period-header.desk { border-left-color: var(--warn); }
+
+.period-icon { font-size: 18px; }
+.period-name { font-size: 13px; font-weight: 700; }
+.period-time { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; margin-left: auto; }
+.period-done { font-size: 10px; font-family: 'Space Mono', monospace; }
+
+.task-list { display: flex; flex-direction: column; gap: 8px; }
+
+.task-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+.task-item.active::before { background: var(--accent2); }
+.task-item.completed::before { background: var(--done); }
+.task-item.completed { opacity: 0.65; }
+
+.task-item:hover { border-color: var(--accent); transform: translateX(2px); }
+.task-item.completed:hover { border-color: var(--done); }
+
+.t-icon { font-size: 22px; flex-shrink: 0; }
+
+.t-info { flex: 1; min-width: 0; }
+.t-name { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.t-name.completed-text { text-decoration: line-through; }
+.t-meta { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 3px; }
+.t-tag {
+  display: inline-block;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+.tag-critical { background: rgba(255,56,96,0.15); color: var(--danger); border: 1px solid rgba(255,56,96,0.3); }
+.tag-important { background: rgba(255,107,53,0.15); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
+.tag-daily { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+.t-check {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  color: transparent;
+}
+
+.task-item.completed .t-check {
+  background: var(--done);
+  border-color: var(--done);
+  color: var(--bg);
+  box-shadow: 0 0 12px rgba(57,255,20,0.4);
+}
+
+.task-item:not(.completed):hover .t-check { border-color: var(--accent); }
+
+/* ── DESK REMINDER ── */
+.desk-reminder {
+  margin: 0 20px 16px;
+  background: linear-gradient(135deg, rgba(255,190,11,0.1), rgba(255,107,53,0.05));
+  border: 1px solid rgba(255,190,11,0.3);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.desk-rem-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.desk-rem-title { font-size: 12px; font-weight: 700; color: var(--warn); letter-spacing: 1px; }
+
+.desk-timer {
+  font-family: 'Space Mono', monospace;
+  font-size: 28px;
+  color: var(--warn);
+  text-align: center;
+  margin: 8px 0;
+  text-shadow: 0 0 20px rgba(255,190,11,0.3);
+}
+
+.desk-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--warn);
+  background: rgba(255,190,11,0.1);
+  color: var(--warn);
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.desk-btn:hover { background: rgba(255,190,11,0.2); }
+.desk-btn.active { background: var(--warn); color: var(--bg); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(6,11,24,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 10px 0 16px;
+  z-index: 100;
+}
+
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  color: var(--muted);
+}
+
+.nav-btn.active { color: var(--accent); }
+.nav-btn .nav-icon { font-size: 22px; }
+.nav-btn .nav-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+
+/* ── HISTORY TAB ── */
+.history-section { padding: 0 20px; }
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.day-dot {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 9px;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.day-dot .day-name { color: var(--muted); font-size: 8px; margin-bottom: 3px; }
+.day-dot .day-score { font-weight: 700; font-size: 12px; }
+.day-dot.today { border-color: var(--accent); }
+.day-dot.great { background: rgba(57,255,20,0.1); border-color: var(--done); }
+.day-dot.good { background: rgba(0,212,255,0.08); border-color: var(--accent); }
+.day-dot.poor { background: rgba(255,56,96,0.08); border-color: var(--danger); }
+.day-dot.empty { opacity: 0.3; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-val { font-size: 28px; font-weight: 800; font-family: 'Space Mono', monospace; }
+.stat-val.green { color: var(--done); }
+.stat-val.blue { color: var(--accent); }
+.stat-val.orange { color: var(--accent2); }
+.stat-val.yellow { color: var(--warn); }
+.stat-lbl { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  background: var(--surface2);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 999;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--done); color: var(--done); }
+.toast.warn { border-color: var(--warn); color: var(--warn); }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── ANIMATIONS ── */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(255,107,53,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); }
+}
+
+.current-task-card { animation: pulse-ring 2s infinite; }
+.current-task-card.done-state { animation: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task-item { animation: fadeIn 0.3s ease both; }
+
+/* Notification banner */
+.notif-banner {
+  margin: 0 20px 16px;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.notif-btn {
+  margin-left: auto;
+  padding: 5px 12px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.reset-btn {
+  display: block;
+  margin: 10px 20px 0;
+  padding: 12px;
+  width: calc(100% - 40px);
+  background: rgba(255,56,96,0.1);
+  border: 1px solid rgba(255,56,96,0.3);
+  color: var(--danger);
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.reset-btn:hover { background: rgba(255,56,96,0.2); }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="app-name">SpineGuard PWA</div>
+        <div class="patient-name">Saroj Subedi</div>
+        <div class="patient-sub">L4-L5 Bulge · L5-S1 Herniation · 39M</div>
+      </div>
+      <div class="streak-badge">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">DAY STREAK</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODAY VIEW -->
+  <div class="view active" id="view-today">
+
+    <!-- HERO CLOCK -->
+    <div class="hero-card">
+      <div class="now-label">Current Time</div>
+      <div class="clock-display" id="clock">00:00:00</div>
+      <div class="date-display" id="date-display"></div>
+      <div class="current-task-label">Do This Now</div>
+      <div id="current-task-container"></div>
+    </div>
+
+    <!-- DESK STAND REMINDER -->
+    <div class="desk-reminder">
+      <div class="desk-rem-header">
+        <span>💻</span>
+        <span class="desk-rem-title">STAND UP TIMER</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;">Every 30 min</span>
+      </div>
+      <div class="desk-timer" id="desk-timer">30:00</div>
+      <button class="desk-btn" id="desk-btn" onclick="toggleDeskTimer()">START TIMER</button>
+    </div>
+
+    <!-- NOTIFICATION BANNER -->
+    <div class="notif-banner" id="notif-banner">
+      <span>🔔</span>
+      <span>Enable reminders to get notified when it's time to exercise</span>
+      <button class="notif-btn" onclick="requestNotifications()">Enable</button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+      <div class="section-header">
+        <span class="section-title">Today's Progress</span>
+        <span class="progress-stats" id="progress-stats">0 / 0</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-section" id="timeline"></div>
+
+    <button class="reset-btn" onclick="resetToday()">Reset Today's Habits</button>
+
+  </div>
+
+  <!-- HISTORY VIEW -->
+  <div class="view" id="view-history">
+    <div style="padding:20px 20px 10px;">
+      <div class="section-title" style="margin-bottom:16px;">7-Day Overview</div>
+      <div class="week-grid" id="week-grid"></div>
+
+      <div class="section-title" style="margin-bottom:12px;">All-Time Stats</div>
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <div class="section-title" style="margin-bottom:12px;margin-top:4px;">Diagnosis Reminder</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:12px;line-height:1.8;color:var(--muted);font-family:'Space Mono',monospace;">
+        <div style="color:var(--danger);margin-bottom:6px;font-weight:700;">L5-S1 HERNIATED DISC</div>
+        Sciatic nerve compressed. Cause of leg shooting pain.<br><br>
+        <div style="color:var(--warn);margin-bottom:6px;font-weight:700;">L4-L5 DISC BULGE</div>
+        Canal narrowing + facet arthritis. Cause of back pain.<br><br>
+        <div style="color:var(--done);font-weight:700;">NO FRACTURE · NO TUMOR · NO INFECTION</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO VIEW -->
+  <div class="view" id="view-info">
+    <div style="padding:20px;">
+      <div class="section-title" style="margin-bottom:16px;">Red Flag Symptoms</div>
+      <div style="background:rgba(255,56,96,0.08);border:1px solid rgba(255,56,96,0.3);border-radius:14px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:12px;line-height:2;font-family:'Space Mono',monospace;color:var(--danger);">
+          🚨 Loss of bladder/bowel control<br>
+          🚨 Both legs numb or paralyzed<br>
+          🚨 Uncontrolled severe pain<br>
+          <div style="color:var(--muted);margin-top:8px;font-size:11px;">→ GO TO EMERGENCY IMMEDIATELY</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:12px;">Exercises To AVOID</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:12px;line-height:2.2;font-family:'Space Mono',monospace;color:var(--muted);">
+          ❌ Full sit-ups / crunches<br>
+          ❌ Deadlifts / heavy squats<br>
+          ❌ Toe touches (standing)<br>
+          ❌ Running on hard surface<br>
+          ❌ Long motorcycle rides<br>
+          ❌ Off-road biking
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:12px;">Recovery Timeline</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:12px;line-height:2.5;font-family:'Space Mono',monospace;">
+          <span style="color:var(--muted);">Week 1-2  →</span> <span style="color:var(--text);">Start gently, pain similar</span><br>
+          <span style="color:var(--muted);">Week 3-4  →</span> <span style="color:var(--text);">Morning stiffness reduces</span><br>
+          <span style="color:var(--muted);">Month 2   →</span> <span style="color:var(--accent);">Leg pain noticeably better</span><br>
+          <span style="color:var(--muted);">Month 3   →</span> <span style="color:var(--warn);">Significant improvement</span><br>
+          <span style="color:var(--muted);">Month 6+  →</span> <span style="color:var(--done);">Near normal if consistent</span>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:12px;">Desk Setup Checklist</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;">
+        <div style="font-size:12px;line-height:2.2;font-family:'Space Mono',monospace;color:var(--muted);">
+          ✅ Monitor at eye level<br>
+          ✅ Lumbar support cushion<br>
+          ✅ Hips slightly above knees<br>
+          ✅ Feet flat on floor<br>
+          ✅ Elbows at 90 degrees<br>
+          ✅ Stand every 20-30 minutes
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-today" onclick="switchTab('today')">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Today</span>
+  </button>
+  <button class="nav-btn" id="nav-history" onclick="switchTab('history')">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">History</span>
+  </button>
+  <button class="nav-btn" id="nav-info" onclick="switchTab('info')">
+    <span class="nav-icon">💡</span>
+    <span class="nav-label">Guide</span>
+  </button>
+</nav>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA — Saroj's full daily schedule
+// ══════════════════════════════════════════════
+const SCHEDULE = [
+  {
+    period: 'Morning', icon: '🌅', timeLabel: '06:00 – 08:00', color: 'morning',
+    tasks: [
+      { id: 'bed-stretch', name: 'Knee-to-Chest Stretch', icon: '🛏️', time: '06:00', duration: '5 min', tag: 'critical', desc: 'Both knees to chest, 30 sec each, 3x' },
+      { id: 'cat-cow', name: 'Cat-Cow + Pelvic Tilts', icon: '🐱', time: '06:05', duration: '5 min', tag: 'critical', desc: '10 reps slow, then 15 pelvic tilts' },
+      { id: 'morning-walk', name: 'Morning Walk', icon: '🚶', time: '06:15', duration: '15 min', tag: 'critical', desc: 'Comfortable pace, flat ground' },
+      { id: 'dead-bug', name: 'Dead Bug Exercise', icon: '🐛', time: '06:35', duration: '5 min', tag: 'important', desc: '10 reps each side — core without spine stress' },
+      { id: 'bird-dog', name: 'Bird Dog', icon: '🦅', time: '06:40', duration: '5 min', tag: 'important', desc: '10 reps each side, hold 5 seconds' },
+      { id: 'glute-bridge', name: 'Glute Bridge', icon: '🍑', time: '06:45', duration: '5 min', tag: 'important', desc: '15 reps, squeeze at top, hold 5 sec' },
+    ]
+  },
+  {
+    period: 'Desk / Work', icon: '💻', timeLabel: '09:00 – 17:00', color: 'desk',
+    tasks: [
+      { id: 'desk-setup', name: 'Check Desk Posture', icon: '🪑', time: '09:00', duration: '2 min', tag: 'daily', desc: 'Monitor eye level, lumbar support, feet flat' },
+      { id: 'stand-1030', name: 'Stand & Stretch Break', icon: '🧍', time: '10:30', duration: '2 min', tag: 'daily', desc: 'Stand up, walk around, hip flexor stretch' },
+      { id: 'stand-1200', name: 'Stand & Stretch Break', icon: '🧍', time: '12:00', duration: '2 min', tag: 'daily', desc: 'Stand up, walk around, piriformis stretch' },
+      { id: 'stand-1400', name: 'Stand & Stretch Break', icon: '🧍', time: '14:00', duration: '2 min', tag: 'daily', desc: 'Stand up, walk, pelvic tilts x10' },
+      { id: 'stand-1530', name: 'Stand & Stretch Break', icon: '🧍', time: '15:30', duration: '2 min', tag: 'daily', desc: 'Stand up, sciatic nerve floss x10' },
+    ]
+  },
+  {
+    period: 'Lunch Break', icon: '☀️', timeLabel: '12:30 – 13:30', color: 'morning',
+    tasks: [
+      { id: 'lunch-walk', name: 'Lunch Walk', icon: '🚶', time: '12:30', duration: '10 min', tag: 'important', desc: 'Do NOT eat at desk — walk instead' },
+      { id: 'hip-flexor', name: 'Hip Flexor Stretch', icon: '🦵', time: '12:42', duration: '3 min', tag: 'important', desc: 'Lunge position, 30 sec each side x2' },
+      { id: 'piriformis', name: 'Piriformis Stretch', icon: '🧘', time: '12:47', duration: '3 min', tag: 'important', desc: 'Ankle over knee, lean forward, 45 sec each' },
+      { id: 'hamstring', name: 'Hamstring Stretch', icon: '🦿', time: '12:52', duration: '3 min', tag: 'daily', desc: 'Heel on chair, hinge at hip, 30 sec each' },
+    ]
+  },
+  {
+    period: 'Evening', icon: '🌆', timeLabel: '18:00 – 20:00', color: 'evening',
+    tasks: [
+      { id: 'mckenzie', name: 'McKenzie Press-Up', icon: '💪', time: '18:00', duration: '10 min', tag: 'critical', desc: '10 reps x3 sets — MOST IMPORTANT for disc herniation' },
+      { id: 'nerve-floss', name: 'Sciatic Nerve Flossing', icon: '⚡', time: '18:12', duration: '5 min', tag: 'critical', desc: '15 reps each side — directly relieves sciatica' },
+      { id: 'side-leg', name: 'Side-Lying Leg Raises', icon: '🦵', time: '18:18', duration: '5 min', tag: 'important', desc: '15 reps each side — hip stabilizers' },
+      { id: 'partial-crunch', name: 'Partial Crunches', icon: '🏋️', time: '18:25', duration: '5 min', tag: 'important', desc: 'Shoulders only, 15 reps — NOT full sit-ups' },
+      { id: 'evening-walk', name: 'Evening Walk', icon: '🌇', time: '18:45', duration: '15 min', tag: 'important', desc: 'Relaxed pace, avoid hills initially' },
+    ]
+  },
+  {
+    period: 'Before Bed', icon: '🌙', timeLabel: '21:00 – 22:00', color: 'night',
+    tasks: [
+      { id: 'supine-twist', name: 'Supine Spinal Twist', icon: '🌀', time: '21:00', duration: '3 min', tag: 'daily', desc: 'Knee across body, shoulders flat, 30 sec each' },
+      { id: 'childs-pose', name: "Child's Pose", icon: '🧘', time: '21:05', duration: '2 min', tag: 'daily', desc: 'Arms stretched forward, 60 seconds, breathe deeply' },
+      { id: 'legs-wall', name: 'Legs Up The Wall', icon: '🪜', time: '21:08', duration: '5 min', tag: 'important', desc: 'Best disc decompression — 5 full minutes' },
+      { id: 'sleep-pos', name: 'Sleep on Side + Pillow Between Knees', icon: '😴', time: '22:00', duration: 'Night', tag: 'daily', desc: 'Pillow between knees — keeps spine neutral all night' },
+    ]
+  }
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const todayKey = () => new Date().toISOString().slice(0,10);
+
+function getState() {
+  try {
+    return JSON.parse(localStorage.getItem('spineguard_v2') || '{}');
+  } catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem('spineguard_v2', JSON.stringify(state));
+}
+
+function getTodayDone() {
+  const state = getState();
+  return state[todayKey()] || {};
+}
+
+function toggleTask(id) {
+  const state = getState();
+  const today = todayKey();
+  if (!state[today]) state[today] = {};
+  const wasDone = state[today][id];
+  state[today][id] = !wasDone;
+  saveState(state);
+  updateUI();
+  showToast(wasDone ? 'Unchecked' : 'Great job! Keep it up!', wasDone ? 'warn' : 'success');
+}
+
+function resetToday() {
+  if (!confirm('Reset all of today\'s habits?')) return;
+  const state = getState();
+  delete state[todayKey()];
+  saveState(state);
+  updateUI();
+  showToast('Reset done', 'warn');
+}
+
+// ══════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('date-display').textContent =
+    `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+// ══════════════════════════════════════════════
+// CURRENT TASK
+// ══════════════════════════════════════════════
+function getCurrentTask() {
+  const now = new Date();
+  const currentMins = now.getHours() * 60 + now.getMinutes();
+  const allTasks = SCHEDULE.flatMap(p => p.tasks);
+  let best = null, bestDiff = Infinity;
+
+  for (const task of allTasks) {
+    if (task.time === 'Night') continue;
+    const [th, tm] = task.time.split(':').map(Number);
+    const taskMins = th * 60 + tm;
+    const diff = Math.abs(currentMins - taskMins);
+    if (diff < bestDiff && diff < 90) {
+      bestDiff = diff;
+      best = task;
+    }
+  }
+  return best;
+}
+
+// ══════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════
+function renderTimeline() {
+  const done = getTodayDone();
+  const current = getCurrentTask();
+  const timeline = document.getElementById('timeline');
+  timeline.innerHTML = '';
+
+  SCHEDULE.forEach(period => {
+    const periodDone = period.tasks.filter(t => done[t.id]).length;
+    const div = document.createElement('div');
+    div.className = 'day-period';
+
+    const colorMap = { morning: '', evening: 'evening', night: 'night', desk: 'desk' };
+
+    div.innerHTML = `
+      <div class="period-header ${colorMap[period.color] || ''}">
+        <span class="period-icon">${period.icon}</span>
+        <span class="period-name">${period.period}</span>
+        <span class="period-time">${period.timeLabel}</span>
+        <span class="period-done" style="color:${periodDone===period.tasks.length?'var(--done)':'var(--muted)'}">${periodDone}/${period.tasks.length}</span>
+      </div>
+      <div class="task-list">
+        ${period.tasks.map((task, i) => {
+          const isDone = done[task.id];
+          const isCurrent = current && current.id === task.id;
+          return `
+            <div class="task-item ${isDone?'completed':''} ${isCurrent&&!isDone?'active':''}"
+                 onclick="toggleTask('${task.id}')"
+                 style="animation-delay:${i*0.05}s">
+              <span class="t-icon">${task.icon}</span>
+              <div class="t-info">
+                <div class="t-name ${isDone?'completed-text':''}">${task.name}</div>
+                <div class="t-meta">${task.time} · ${task.duration}</div>
+                <div class="t-meta" style="color:var(--text);opacity:0.6;font-size:9px;">${task.desc}</div>
+                <span class="t-tag tag-${task.tag}">${task.tag.toUpperCase()}</span>
+              </div>
+              <div class="t-check ${isDone?'checked':''}">✓</div>
+            </div>`;
+        }).join('')}
+      </div>`;
+    timeline.appendChild(div);
+  });
+}
+
+function renderCurrentTask() {
+  const done = getTodayDone();
+  const current = getCurrentTask();
+  const container = document.getElementById('current-task-container');
+
+  if (!current) {
+    container.innerHTML = `<div class="no-task">Rest time — great work today!</div>`;
+    return;
+  }
+
+  const isDone = done[current.id];
+  container.innerHTML = `
+    <div class="current-task-card ${isDone?'done-state':''}" onclick="toggleTask('${current.id}')">
+      <span class="task-icon">${current.icon}</span>
+      <div class="task-info">
+        <div class="task-name" style="${isDone?'text-decoration:line-through;color:var(--done)':''}">${current.name}</div>
+        <div class="task-time-range">${current.time} · ${current.duration}</div>
+        <div class="task-duration" style="color:var(--muted);font-size:10px;">${current.desc}</div>
+      </div>
+      <div class="task-check ${isDone?'checked':''}">✓</div>
+    </div>`;
+}
+
+function renderProgress() {
+  const done = getTodayDone();
+  const allTasks = SCHEDULE.flatMap(p => p.tasks);
+  const total = allTasks.length;
+  const completed = allTasks.filter(t => done[t.id]).length;
+  const pct = total > 0 ? Math.round(completed/total*100) : 0;
+
+  document.getElementById('progress-stats').textContent = `${completed} / ${total} — ${pct}%`;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function renderStreak() {
+  const state = getState();
+  const allTasks = SCHEDULE.flatMap(p => p.tasks);
+  let streak = 0;
+  const now = new Date();
+
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0,10);
+    const dayDone = state[key] || {};
+    const completed = allTasks.filter(t => dayDone[t.id]).length;
+    if (completed >= Math.floor(allTasks.length * 0.5)) {
+      streak++;
+    } else if (i > 0) break;
+  }
+
+  document.getElementById('streak-num').textContent = streak;
+}
+
+function renderHistory() {
+  const state = getState();
+  const allTasks = SCHEDULE.flatMap(p => p.tasks);
+  const today = todayKey();
+
+  // Week grid
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  const dayNames = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const now = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0,10);
+    const dayDone = state[key] || {};
+    const completed = allTasks.filter(t => dayDone[t.id]).length;
+    const pct = Math.round(completed / allTasks.length * 100);
+    const isToday = key === today;
+    const cls = completed === 0 ? 'empty' : pct >= 70 ? 'great' : pct >= 40 ? 'good' : 'poor';
+
+    grid.innerHTML += `
+      <div class="day-dot ${cls} ${isToday?'today':''}">
+        <span class="day-name">${dayNames[d.getDay()]}</span>
+        <span class="day-score" style="color:${pct>=70?'var(--done)':pct>=40?'var(--accent)':pct>0?'var(--danger)':'var(--muted)'}">${completed>0?pct+'%':'–'}</span>
+      </div>`;
+  }
+
+  // Stats
+  const statGrid = document.getElementById('stat-grid');
+  const allDays = Object.keys(state);
+  let totalDone = 0, bestDay = 0, totalDays = allDays.length;
+  allDays.forEach(key => {
+    const d = state[key];
+    const c = allTasks.filter(t => d[t.id]).length;
+    totalDone += c;
+    if (c > bestDay) bestDay = c;
+  });
+
+  statGrid.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-val green">${document.getElementById('streak-num').textContent}</div>
+      <div class="stat-lbl">Day Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val blue">${totalDays}</div>
+      <div class="stat-lbl">Days Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val orange">${totalDone}</div>
+      <div class="stat-lbl">Tasks Done Total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val yellow">${bestDay}</div>
+      <div class="stat-lbl">Best Day Tasks</div>
+    </div>`;
+}
+
+function updateUI() {
+  renderProgress();
+  renderStreak();
+  renderCurrentTask();
+  renderTimeline();
+}
+
+// ══════════════════════════════════════════════
+// DESK TIMER
+// ══════════════════════════════════════════════
+let deskInterval = null;
+let deskSeconds = 30 * 60;
+let deskRunning = false;
+
+function updateDeskDisplay() {
+  const m = Math.floor(deskSeconds / 60);
+  const s = deskSeconds % 60;
+  document.getElementById('desk-timer').textContent =
+    `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function toggleDeskTimer() {
+  const btn = document.getElementById('desk-btn');
+  if (deskRunning) {
+    clearInterval(deskInterval);
+    deskRunning = false;
+    deskSeconds = 30 * 60;
+    updateDeskDisplay();
+    btn.textContent = 'START TIMER';
+    btn.classList.remove('active');
+  } else {
+    deskRunning = true;
+    btn.textContent = 'STOP TIMER';
+    btn.classList.add('active');
+    deskInterval = setInterval(() => {
+      deskSeconds--;
+      updateDeskDisplay();
+      if (deskSeconds <= 0) {
+        clearInterval(deskInterval);
+        deskRunning = false;
+        deskSeconds = 30 * 60;
+        updateDeskDisplay();
+        btn.textContent = 'START TIMER';
+        btn.classList.remove('active');
+        showToast('STAND UP! Time to move!', 'warn');
+        if (Notification.permission === 'granted') {
+          new Notification('SpineGuard', { body: 'STAND UP! 30 minutes are up. Walk for 2 minutes.' });
+        }
+      }
+    }, 1000);
+  }
+}
+
+// ══════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════
+function requestNotifications() {
+  if (!('Notification' in window)) { showToast('Notifications not supported', 'warn'); return; }
+  Notification.requestPermission().then(p => {
+    if (p === 'granted') {
+      document.getElementById('notif-banner').style.display = 'none';
+      showToast('Reminders enabled!', 'success');
+      scheduleNotifications();
+    }
+  });
+}
+
+function scheduleNotifications() {
+  // Check every minute if a task is due
+  setInterval(() => {
+    if (Notification.permission !== 'granted') return;
+    const current = getCurrentTask();
+    if (!current) return;
+    const done = getTodayDone();
+    if (!done[current.id]) {
+      const now = new Date();
+      const [th, tm] = current.time.split(':').map(Number);
+      if (now.getHours() === th && now.getMinutes() === tm) {
+        new Notification('SpineGuard — Time to move!', {
+          body: `${current.icon} ${current.name} — ${current.duration}`,
+        });
+      }
+    }
+  }, 60000);
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2500);
+}
+
+// ══════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`view-${tab}`).classList.add('active');
+  document.getElementById(`nav-${tab}`).classList.add('active');
+  if (tab === 'history') renderHistory();
+}
+
+// ══════════════════════════════════════════════
+// NOTIFICATION BANNER
+// ══════════════════════════════════════════════
+if (Notification.permission === 'granted') {
+  document.getElementById('notif-banner').style.display = 'none';
+  scheduleNotifications();
+}
+
+// ══════════════════════════════════════════════
+// PWA MANIFEST (inline)
+// ══════════════════════════════════════════════
+const manifest = {
+  name: "SpineGuard — Saroj's Recovery",
+  short_name: "SpineGuard",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#060b18",
+  theme_color: "#00d4ff",
+  icons: [{ src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦴</text></svg>", sizes: "192x192", type: "image/svg+xml" }]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+document.getElementById('manifest-link').href = URL.createObjectURL(blob);
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+setInterval(updateClock, 1000);
+setInterval(() => { renderCurrentTask(); }, 30000); // refresh current task every 30s
+updateClock();
+updateUI();
+</script>
+</body>
+</html>
