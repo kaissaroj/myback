@@ -6,52 +6,35 @@
 <meta name="theme-color" content="#f7f7f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SpineGuard">
-<title>SpineGuard</title>
-<link rel="manifest" id="manifest-link" href="#">
+<title>SpineGuard — Saroj's Back Recovery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:       #f7f7f5;
-  --surface:  #ffffff;
-  --surface2: #f0f0ec;
-  --border:   #e8e8e3;
-  --border2:  #d4d4cc;
-  --text:     #1a1a18;
-  --text2:    #6b6b63;
-  --text3:    #a8a89e;
-  --green:    #2d7a4f;
-  --green-bg: #edf7f1;
-  --green-bd: #b8dfc8;
-  --amber:    #b45309;
-  --amber-bg: #fef3e2;
-  --amber-bd: #f5d48a;
-  --red:      #c0392b;
-  --red-bg:   #fdf0ee;
-  --red-bd:   #f0b8b2;
-  --blue:     #1d5fa8;
-  --blue-bg:  #eff5fd;
-  --blue-bd:  #b8d0f0;
-  --ink:      #1a1a18;
-  --radius:   14px;
-  --shadow:   0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  --shadow-md:0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.06);
+:root{
+  --bg:#f7f7f5; --surface:#fff; --surface2:#f0f0ec;
+  --border:#e8e8e3; --border2:#d4d4cc;
+  --text:#1a1a18; --text2:#6b6b63; --text3:#a8a89e; --ink:#1a1a18;
+  --green:#2d7a4f; --green-bg:#edf7f1; --green-bd:#b8dfc8;
+  --amber:#b45309; --amber-bg:#fef3e2; --amber-bd:#f5d48a;
+  --red:#c0392b; --red-bg:#fdf0ee; --red-bd:#f0b8b2;
+  --blue:#1d5fa8; --blue-bg:#eff5fd; --blue-bd:#b8d0f0;
+  --radius:14px; --radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --shadow-md:0 2px 8px rgba(0,0,0,.08),0 8px 32px rgba(0,0,0,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
-
-.app{max-width:430px;margin:0 auto;padding-bottom:88px;}
+.app{max-width:430px;margin:0 auto;padding-bottom:90px;}
 
 /* HEADER */
 .header{padding:18px 20px 14px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
-.header-row{display:flex;justify-content:space-between;align-items:center;}
 .brand{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:2px;}
-.patient{font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.3px;}
+.header-row{display:flex;justify-content:space-between;align-items:center;}
+.patient{font-size:19px;font-weight:600;letter-spacing:-.3px;}
 .streak-pill{display:flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:100px;padding:6px 12px;}
 .streak-num{font-size:17px;font-weight:600;color:var(--green);font-family:'DM Mono',monospace;}
-.streak-lbl{font-size:11px;color:var(--green);opacity:.8;}
+.streak-lbl{font-size:11px;color:var(--green);}
 
 /* VIEWS */
 .view{display:none;} .view.active{display:block;}
@@ -59,110 +42,112 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* CLOCK CARD */
 .clock-card{margin:14px 16px 10px;background:var(--ink);border-radius:var(--radius);padding:20px;color:#fff;box-shadow:var(--shadow-md);}
 .clock-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:3px;}
-.clock-time{font-family:'DM Mono',monospace;font-size:48px;font-weight:400;letter-spacing:-2px;line-height:1;color:#fff;}
+.clock-time{font-family:'DM Mono',monospace;font-size:48px;font-weight:400;letter-spacing:-2px;line-height:1;}
 .clock-date{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px;margin-bottom:14px;font-family:'DM Mono',monospace;}
 
 /* COUNTDOWN */
 .countdown-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;margin-bottom:12px;}
-.cd-label{font-size:11px;color:rgba(255,255,255,.4);flex:1;}
-.cd-task{font-size:12px;font-weight:500;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
-.cd-time{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:#fff;flex-shrink:0;}
+.cd-info{flex:1;min-width:0;}
+.cd-label{font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;}
+.cd-task{font-size:12px;font-weight:500;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.cd-time{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:#fff;flex-shrink:0;}
 .cd-time.urgent{color:#fbbf24;}
-.cd-time.now{color:#4ade80;}
+.cd-time.now-color{color:#4ade80;}
 
 /* NOW TASK */
 .now-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
 .now-task{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s;}
-.now-task:hover{background:rgba(255,255,255,.13);}
+.now-task:hover,.now-task:active{background:rgba(255,255,255,.14);}
 .now-task.done{background:rgba(45,122,79,.25);border-color:rgba(45,122,79,.5);}
 .now-icon{font-size:22px;flex-shrink:0;}
 .now-info{flex:1;}
 .now-name{font-size:14px;font-weight:500;color:#fff;}
-.now-name.done-text{text-decoration:line-through;opacity:.55;}
+.now-name.striked{text-decoration:line-through;opacity:.5;}
 .now-meta{font-size:11px;color:rgba(255,255,255,.38);font-family:'DM Mono',monospace;margin-top:2px;}
-.now-check{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;flex-shrink:0;transition:all .2s;}
+.now-check{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;flex-shrink:0;transition:all .2s;}
 .now-check.checked{background:var(--green);border-color:var(--green);color:#fff;}
-.now-rest{font-size:13px;color:rgba(255,255,255,.38);text-align:center;padding:8px;}
+.now-rest{font-size:13px;color:rgba(255,255,255,.38);text-align:center;padding:6px;}
 
 /* PROGRESS */
-.progress-wrap{padding:0 16px;margin-bottom:6px;}
+.progress-wrap{padding:0 16px;margin-bottom:8px;}
 .progress-top{display:flex;justify-content:space-between;margin-bottom:7px;}
-.progress-title{font-size:12px;color:var(--text2);font-weight:500;}
-.progress-count{font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;}
-.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-.progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .5s ease;}
+.prog-title{font-size:12px;color:var(--text2);font-weight:500;}
+.prog-count{font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;}
+.prog-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .5s;}
 
 /* STAND TIMER */
-.stand-card{margin:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);}
+.stand-card{margin:0 16px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);}
 .stand-icon{font-size:26px;flex-shrink:0;}
 .stand-info{flex:1;}
 .stand-title{font-size:13px;font-weight:600;}
-.stand-sub{font-size:11px;color:var(--text3);margin-top:1px;}
-.stand-time{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--amber);}
-.stand-btn{padding:7px 13px;border-radius:100px;border:1.5px solid var(--border2);background:var(--surface2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.stand-sub{font-size:11px;color:var(--text3);}
+.stand-time{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--amber);flex-shrink:0;}
+.stand-btn{padding:7px 14px;border-radius:100px;border:1.5px solid var(--border2);background:var(--surface2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;flex-shrink:0;}
 .stand-btn:hover{border-color:var(--amber);color:var(--amber);}
 .stand-btn.running{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber);}
 
-/* NOTIF BAR */
-.notif-bar{margin:0 16px 8px;background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--blue);}
-.notif-bar span{flex:1;}
-.notif-enable{padding:5px 12px;background:var(--blue);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0;}
+/* NOTIF CARD — replaces old simple bar */
+.notif-card{margin:0 16px 8px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);overflow:hidden;}
+.notif-card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+.notif-card-icon{font-size:20px;}
+.notif-card-title{font-size:13px;font-weight:600;flex:1;}
+.notif-status{font-size:11px;font-family:'DM Mono',monospace;padding:3px 10px;border-radius:100px;font-weight:500;}
+.notif-status.off{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.notif-status.on{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.notif-status.blocked{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.notif-body{padding:12px 16px;}
+.notif-desc{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.notif-btn{width:100%;padding:11px;border-radius:var(--radius-sm);border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+.notif-btn.enable{background:var(--ink);color:#fff;}
+.notif-btn.enable:hover{opacity:.85;}
+.notif-btn.blocked-btn{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.notif-btn.hidden{display:none;}
+.notif-steps{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.8;}
 
-/* SECTION / PERIOD */
-.section{padding:0 16px;}
-.section-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:14px 0 8px;display:flex;justify-content:space-between;align-items:center;}
-
+/* PERIOD WRAP */
 .period-wrap{padding:0 16px;margin-bottom:4px;}
-.period-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;margin-bottom:6px;background:var(--surface);border:1px solid var(--border);}
+.period-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;margin-bottom:5px;background:var(--surface);border:1px solid var(--border);}
 .period-head.active-period{background:var(--amber-bg);border-color:var(--amber-bd);}
-.period-head.past-period{opacity:.5;}
-.period-icon-h{font-size:16px;}
-.period-name-h{font-size:13px;font-weight:600;}
-.period-time-h{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-left:auto;}
-.period-prog-h{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);}
-.period-head.active-period .period-name-h{color:var(--amber);}
-.period-head.active-period .period-prog-h{color:var(--amber);}
+.period-head.past-period{opacity:.45;}
+.p-icon{font-size:15px;}
+.p-name{font-size:13px;font-weight:600;}
+.p-now-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;background:var(--amber);color:#fff;padding:2px 7px;border-radius:100px;font-family:'DM Mono',monospace;}
+.p-time{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-left:auto;}
+.p-prog{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);}
+.active-period .p-name{color:var(--amber);}
+.active-period .p-prog{color:var(--amber);}
 
-/* ACTIVE PERIOD BADGE */
-.now-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--amber);color:#fff;padding:2px 7px;border-radius:100px;margin-left:6px;font-family:'DM Mono',monospace;}
-
-/* TASK ITEMS */
-.task-group{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;}
-.task-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:11px;cursor:pointer;box-shadow:var(--shadow);transition:all .18s;animation:slideUp .22s ease both;}
-@keyframes slideUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-.task-row:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+/* TASK ROWS */
+.task-group{display:flex;flex-direction:column;gap:5px;margin-bottom:6px;}
+.task-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:var(--shadow);transition:all .18s;animation:slideUp .22s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.task-row:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow-md);}
 .task-row:active{transform:translateY(0);}
-
-/* States */
-.task-row.done{background:var(--surface2);box-shadow:none;border-color:var(--border);}
-.task-row.done:hover{transform:none;box-shadow:none;}
-.task-row.current-now{border-color:var(--amber-bd);background:var(--amber-bg);}
-.task-row.past-missed{opacity:.4;background:var(--surface2);box-shadow:none;border-style:dashed;}
-.task-row.past-missed:hover{transform:none;opacity:.55;}
-
-.t-icon{font-size:19px;flex-shrink:0;width:26px;text-align:center;}
+.task-row.t-done{background:var(--surface2);box-shadow:none;}
+.task-row.t-done:hover{transform:none;box-shadow:none;}
+.task-row.t-now{border-color:var(--amber-bd);background:var(--amber-bg);}
+.task-row.t-missed{opacity:.38;background:var(--surface2);box-shadow:none;border-style:dashed;}
+.task-row.t-missed:hover{transform:none;opacity:.5;}
+.t-icon{font-size:19px;width:26px;text-align:center;flex-shrink:0;}
 .t-body{flex:1;min-width:0;}
-.t-name{font-size:13px;font-weight:500;color:var(--ink);}
-.t-name.done-text{text-decoration:line-through;color:var(--text3);}
-.t-name.missed-text{color:var(--text3);}
+.t-name{font-size:13px;font-weight:500;}
+.t-name.done-txt{text-decoration:line-through;color:var(--text3);}
+.t-name.missed-txt{color:var(--text3);}
 .t-sub{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
-.t-desc{font-size:11px;color:var(--text2);margin-top:5px;line-height:1.5;display:none;padding-top:4px;border-top:1px solid var(--border);}
+.t-desc{font-size:11px;color:var(--text2);margin-top:6px;line-height:1.5;display:none;border-top:1px solid var(--border);padding-top:6px;}
 .task-row.expanded .t-desc{display:block;}
-
 .t-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
 .t-badge{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:100px;font-family:'DM Mono',monospace;}
 .badge-critical{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
 .badge-important{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
 .badge-daily{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.missed-chip{font-size:9px;color:var(--red);font-family:'DM Mono',monospace;background:var(--red-bg);border:1px solid var(--red-bd);padding:2px 6px;border-radius:100px;}
 .t-check{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .2s;background:var(--surface);}
-.task-row.done .t-check{background:var(--green);border-color:var(--green);color:#fff;}
-.task-row.current-now .t-check{border-color:var(--amber);}
-
-/* MISSED LABEL */
-.missed-chip{font-size:9px;color:var(--red);font-family:'DM Mono',monospace;background:var(--red-bg);border:1px solid var(--red-bd);padding:1px 6px;border-radius:100px;}
+.task-row.t-done .t-check{background:var(--green);border-color:var(--green);color:#fff;}
 
 /* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(247,247,245,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;padding:10px 8px env(safe-area-inset-bottom,10px);z-index:100;}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(247,247,245,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;padding:10px 8px env(safe-area-inset-bottom,10px);z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border:none;background:none;cursor:pointer;border-radius:10px;transition:background .15s;color:var(--text3);}
 .nav-item:hover{background:var(--border);}
 .nav-item.active{color:var(--ink);}
@@ -181,10 +166,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px;}
 .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
 .stat-val{font-size:32px;font-weight:600;font-family:'DM Mono',monospace;line-height:1;}
-.stat-val.g{color:var(--green);} .stat-val.b{color:var(--blue);} .stat-val.a{color:var(--amber);} .stat-val.r{color:var(--red);}
+.stat-val.g{color:var(--green);}.stat-val.b{color:var(--blue);}.stat-val.a{color:var(--amber);}.stat-val.r{color:var(--red);}
 .stat-lbl{font-size:11px;color:var(--text3);margin-top:5px;font-weight:500;}
 
 /* GUIDE */
+.section{padding:0 16px;}
+.section-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:14px 0 8px;}
 .guide-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:0 16px 10px;overflow:hidden;box-shadow:var(--shadow);}
 .guide-head{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .guide-head-icon{font-size:17px;}
@@ -192,15 +179,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .guide-body{padding:12px 16px;}
 .guide-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);}
 .guide-row:last-child{border:none;}
-.guide-row .gr-i{flex-shrink:0;font-size:13px;}
+.gr-i{flex-shrink:0;font-size:13px;margin-top:1px;}
 
 /* TOAST */
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--ink);color:#fff;border-radius:100px;padding:10px 20px;font-size:13px;font-weight:500;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:var(--shadow-md);pointer-events:none;}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--ink);color:#fff;border-radius:100px;padding:10px 20px;font-size:13px;font-weight:500;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:var(--shadow-md);pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--green);}
 .toast.warn{background:var(--amber);}
 
-/* RESET */
 .reset-btn{display:block;width:calc(100% - 32px);margin:12px 16px 0;padding:12px;background:none;border:1px solid var(--red-bd);color:var(--red);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
 .reset-btn:hover{background:var(--red-bg);}
 </style>
@@ -209,13 +195,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="toast" id="toast"></div>
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
+    <div class="brand">SpineGuard</div>
     <div class="header-row">
-      <div>
-        <div class="brand">SpineGuard</div>
-        <div class="patient">Saroj Subedi</div>
-      </div>
+      <div class="patient">Saroj Subedi</div>
       <div class="streak-pill">
         <span class="streak-num" id="streak-num">0</span>
         <span class="streak-lbl">day streak</span>
@@ -228,30 +211,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
     <div class="clock-card">
       <div class="clock-label">Current time</div>
-      <div class="clock-time" id="clock">00:00</div>
-      <div class="clock-date" id="clock-date"></div>
-
-      <!-- COUNTDOWN TO NEXT TASK -->
-      <div class="countdown-row" id="countdown-row">
-        <div style="flex:1;">
+      <div class="clock-time" id="clock">--:--</div>
+      <div class="clock-date" id="clock-date">Loading...</div>
+      <div class="countdown-row">
+        <div class="cd-info">
           <div class="cd-label">Next up</div>
-          <div class="cd-task" id="cd-task-name">—</div>
+          <div class="cd-task" id="cd-task">—</div>
         </div>
         <div class="cd-time" id="cd-time">—</div>
       </div>
-
       <div class="now-label">Do this now</div>
-      <div id="now-task-wrap"></div>
+      <div id="now-wrap"></div>
     </div>
 
     <div class="progress-wrap">
       <div class="progress-top">
-        <span class="progress-title">Today's progress</span>
-        <span class="progress-count" id="progress-count">0 / 0</span>
+        <span class="prog-title">Today's progress</span>
+        <span class="prog-count" id="prog-count">0 / 0</span>
       </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
 
     <div class="stand-card">
@@ -264,10 +242,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="stand-btn" id="stand-btn" onclick="toggleStand()">Start</button>
     </div>
 
-    <div class="notif-bar" id="notif-bar">
-      <span>🔔</span>
-      <span>Get notified at exact exercise times</span>
-      <button class="notif-enable" onclick="askNotif()">Enable</button>
+    <!-- FIXED NOTIFICATION CARD -->
+    <div class="notif-card" id="notif-card">
+      <div class="notif-card-head">
+        <span class="notif-card-icon">🔔</span>
+        <span class="notif-card-title">Exercise reminders</span>
+        <span class="notif-status off" id="notif-status">OFF</span>
+      </div>
+      <div class="notif-body" id="notif-body">
+        <div class="notif-desc" id="notif-desc">Get a notification at the exact time of each exercise. Works on desktop Chrome and Android Chrome.</div>
+        <button class="notif-btn enable" id="notif-btn" onclick="enableNotifications()">Enable Notifications</button>
+        <div class="notif-steps" id="notif-steps"></div>
+      </div>
     </div>
 
     <div id="timeline-wrap"></div>
@@ -278,15 +264,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="view" id="view-history">
     <div class="section"><div class="section-label">This week</div></div>
     <div class="week-strip" id="week-strip"></div>
-    <div class="section"><div class="section-label" style="margin-top:8px;">All-time stats</div></div>
+    <div class="section"><div class="section-label" style="margin-top:4px;">All-time stats</div></div>
     <div class="stat-row" id="stat-row"></div>
-    <div class="section"><div class="section-label" style="margin-top:8px;">Your diagnosis</div></div>
-    <div class="guide-card" style="margin-top:0;">
+    <div class="section"><div class="section-label" style="margin-top:4px;">Your diagnosis</div></div>
+    <div class="guide-card" style="margin-top:0">
       <div class="guide-head"><span class="guide-head-icon">🦴</span><span class="guide-head-title">MRI Findings — 2026-05-27</span></div>
       <div class="guide-body">
-        <div class="guide-row"><span class="gr-i">🔴</span><span><strong>L5-S1 Herniated disc</strong> — Collapsed &amp; burst, pressing sciatic nerve → cause of leg pain</span></div>
-        <div class="guide-row"><span class="gr-i">🟠</span><span><strong>L4-L5 Disc bulge</strong> — Canal narrowing + facet arthritis → cause of back pain</span></div>
-        <div class="guide-row"><span class="gr-i">🟢</span><span><strong>No fracture · No tumor · No infection</strong> — Good prognosis with consistent care</span></div>
+        <div class="guide-row"><span class="gr-i">🔴</span><span><strong>L5-S1 Herniated disc</strong> — pressing sciatic nerve → leg pain</span></div>
+        <div class="guide-row"><span class="gr-i">🟠</span><span><strong>L4-L5 Disc bulge</strong> — canal narrowing + facet arthritis → back pain</span></div>
+        <div class="guide-row"><span class="gr-i">🟢</span><span><strong>No fracture · No tumor · No infection</strong> — treatable</span></div>
       </div>
     </div>
   </div>
@@ -298,7 +284,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="guide-body">
         <div class="guide-row"><span class="gr-i">🚑</span><span>Loss of bladder or bowel control</span></div>
         <div class="guide-row"><span class="gr-i">🚑</span><span>Both legs numb or paralysed</span></div>
-        <div class="guide-row"><span class="gr-i">🚑</span><span>Uncontrolled, severe pain spike</span></div>
+        <div class="guide-row"><span class="gr-i">🚑</span><span>Uncontrolled severe pain spike</span></div>
       </div>
     </div>
     <div class="section"><div class="section-label">❌ Never do these</div></div>
@@ -318,8 +304,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <div class="guide-row"><span class="gr-i">1</span><span><strong>Week 1–2</strong> — Start gently, pain may stay similar</span></div>
         <div class="guide-row"><span class="gr-i">2</span><span><strong>Week 3–4</strong> — Morning stiffness starts reducing</span></div>
         <div class="guide-row"><span class="gr-i">3</span><span><strong>Month 2</strong> — Leg pain noticeably better</span></div>
-        <div class="guide-row"><span class="gr-i">4</span><span><strong>Month 3</strong> — Significant improvement if consistent</span></div>
-        <div class="guide-row"><span class="gr-i">5</span><span><strong>Month 6+</strong> — Near-normal activity levels</span></div>
+        <div class="guide-row"><span class="gr-i">4</span><span><strong>Month 3</strong> — Significant improvement</span></div>
+        <div class="guide-row"><span class="gr-i">5</span><span><strong>Month 6+</strong> — Near-normal activity</span></div>
       </div>
     </div>
     <div class="section"><div class="section-label">💻 Desk setup</div></div>
@@ -334,7 +320,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
-</div><!-- /app -->
+</div>
 
 <nav class="bottom-nav">
   <button class="nav-item active" id="nav-today" onclick="tab('today')"><span class="ni">🏠</span><span class="nl">Today</span></button>
@@ -343,319 +329,373 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </nav>
 
 <script>
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // SCHEDULE
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 const PERIODS = [
-  { id:'morning', name:'Morning', icon:'🌅', timeRange:[6*60, 9*60], label:'06:00–09:00', tasks:[
-    { id:'bed-knee',    icon:'🛏️', name:'Knee-to-Chest Stretch',  hh:6,  mm:0,  dur:'5 min',  tag:'critical',  desc:'Lie on back. Pull each knee to chest 30 sec. Then both together. 3 rounds.' },
-    { id:'cat-cow',     icon:'🐱', name:'Cat-Cow + Pelvic Tilts', hh:6,  mm:6,  dur:'5 min',  tag:'critical',  desc:'On hands & knees, arch up & dip down 10x slowly. Then 15 pelvic tilts on back.' },
-    { id:'morn-walk',   icon:'🚶', name:'Morning Walk',            hh:6,  mm:15, dur:'15 min', tag:'critical',  desc:'Comfortable flat pace. Pumps nutrients into your discs. Never skip this.' },
-    { id:'dead-bug',    icon:'🐛', name:'Dead Bug',                hh:6,  mm:35, dur:'5 min',  tag:'important', desc:'Lie on back, arms up, knees 90°. Lower opposite arm + leg. Keep back flat. 10 each side.' },
-    { id:'bird-dog',    icon:'🦅', name:'Bird Dog',                hh:6,  mm:42, dur:'5 min',  tag:'important', desc:'On hands & knees. Extend opposite arm + leg, hold 5 sec. 10 reps each side.' },
-    { id:'glute-brg',   icon:'🍑', name:'Glute Bridge',            hh:6,  mm:49, dur:'5 min',  tag:'important', desc:'Feet flat, lift hips, squeeze glutes at top 5 sec. 15 reps. Lower slowly.' },
+  { id:'morning', name:'Morning', icon:'🌅', start:6*60, end:9*60, label:'06:00–09:00', tasks:[
+    {id:'bed-knee',   icon:'🛏️', name:'Knee-to-Chest Stretch',  hh:6, mm:0,  dur:'5 min',  tag:'critical',  desc:'Lie on back. Pull each knee to chest 30 sec. Then both together. 3 rounds.'},
+    {id:'cat-cow',    icon:'🐱', name:'Cat-Cow + Pelvic Tilts', hh:6, mm:6,  dur:'5 min',  tag:'critical',  desc:'Hands & knees, arch up & dip down 10x slowly. Then 15 pelvic tilts on back.'},
+    {id:'morn-walk',  icon:'🚶', name:'Morning Walk',            hh:6, mm:15, dur:'15 min', tag:'critical',  desc:'Comfortable flat pace. Pumps nutrients into your discs. Never skip this.'},
+    {id:'dead-bug',   icon:'🐛', name:'Dead Bug',                hh:6, mm:35, dur:'5 min',  tag:'important', desc:'Lie on back, arms up, knees 90°. Lower opposite arm + leg. Keep back flat. 10 each side.'},
+    {id:'bird-dog',   icon:'🦅', name:'Bird Dog',                hh:6, mm:42, dur:'5 min',  tag:'important', desc:'Hands & knees. Extend opposite arm + leg, hold 5 sec. 10 reps each side.'},
+    {id:'glute-brg',  icon:'🍑', name:'Glute Bridge',            hh:6, mm:49, dur:'5 min',  tag:'important', desc:'Feet flat, lift hips, squeeze glutes at top 5 sec. 15 reps. Lower slowly.'},
   ]},
-  { id:'desk', name:'Desk / Work', icon:'💻', timeRange:[9*60, 17*60], label:'09:00–17:00', tasks:[
-    { id:'desk-chk',    icon:'🪑', name:'Check Posture',           hh:9,  mm:0,  dur:'2 min',  tag:'daily',     desc:'Monitor at eye level. Lumbar cushion. Hips above knees. Feet flat.' },
-    { id:'stand-1030',  icon:'🧍', name:'Stand & Stretch',         hh:10, mm:30, dur:'2 min',  tag:'daily',     desc:'Stand up, walk, hip flexor stretch — 30 sec each leg.' },
-    { id:'stand-1200',  icon:'🧍', name:'Stand & Stretch',         hh:12, mm:0,  dur:'2 min',  tag:'daily',     desc:'Piriformis stretch — ankle over knee, lean forward 45 sec each side.' },
-    { id:'stand-1400',  icon:'🧍', name:'Stand & Stretch',         hh:14, mm:0,  dur:'2 min',  tag:'daily',     desc:'10 pelvic tilts + walk 1 min.' },
-    { id:'stand-1530',  icon:'🧍', name:'Stand & Stretch',         hh:15, mm:30, dur:'2 min',  tag:'daily',     desc:'Sciatic nerve floss — extend leg, point toes, 10 reps each side.' },
+  { id:'desk', name:'Desk / Work', icon:'💻', start:9*60, end:17*60, label:'09:00–17:00', tasks:[
+    {id:'desk-chk',   icon:'🪑', name:'Check Posture',           hh:9,  mm:0,  dur:'2 min', tag:'daily',     desc:'Monitor at eye level. Lumbar cushion. Hips above knees. Feet flat.'},
+    {id:'stand-1030', icon:'🧍', name:'Stand & Stretch',         hh:10, mm:30, dur:'2 min', tag:'daily',     desc:'Stand up, walk, hip flexor stretch — 30 sec each leg.'},
+    {id:'stand-1200', icon:'🧍', name:'Stand & Stretch',         hh:12, mm:0,  dur:'2 min', tag:'daily',     desc:'Piriformis stretch — ankle over knee, lean forward 45 sec each side.'},
+    {id:'stand-1400', icon:'🧍', name:'Stand & Stretch',         hh:14, mm:0,  dur:'2 min', tag:'daily',     desc:'10 pelvic tilts + walk 1 min.'},
+    {id:'stand-1530', icon:'🧍', name:'Stand & Stretch',         hh:15, mm:30, dur:'2 min', tag:'daily',     desc:'Sciatic nerve floss — extend leg, point toes, 10 reps each side.'},
   ]},
-  { id:'lunch', name:'Lunch Break', icon:'☀️', timeRange:[12*60+30, 13*60+30], label:'12:30–13:30', tasks:[
-    { id:'lunch-walk',  icon:'🚶', name:'Lunch Walk',              hh:12, mm:30, dur:'10 min', tag:'important', desc:'Never eat at desk. Walk after lunch every day.' },
-    { id:'hip-flex',    icon:'🦵', name:'Hip Flexor Stretch',      hh:12, mm:42, dur:'3 min',  tag:'important', desc:'Lunge — front foot forward, drop back knee. Hold 30 sec each side x 2.' },
-    { id:'piri',        icon:'🧘', name:'Piriformis Stretch',      hh:12, mm:47, dur:'3 min',  tag:'important', desc:'Sit on chair. Ankle over knee, lean slightly forward. Hold 45 sec each side.' },
-    { id:'hammy',       icon:'🦿', name:'Hamstring Stretch',       hh:12, mm:52, dur:'3 min',  tag:'daily',     desc:'Heel on chair, keep leg straight, hinge at hip. 30 sec each side.' },
+  { id:'lunch', name:'Lunch Break', icon:'☀️', start:12*60+30, end:13*60+30, label:'12:30–13:30', tasks:[
+    {id:'lunch-walk', icon:'🚶', name:'Lunch Walk',              hh:12, mm:30, dur:'10 min', tag:'important', desc:'Never eat at desk. Walk after lunch every day.'},
+    {id:'hip-flex',   icon:'🦵', name:'Hip Flexor Stretch',      hh:12, mm:42, dur:'3 min',  tag:'important', desc:'Lunge — front foot forward, drop back knee. Hold 30 sec each side x 2.'},
+    {id:'piri',       icon:'🧘', name:'Piriformis Stretch',      hh:12, mm:47, dur:'3 min',  tag:'important', desc:'Sit on chair. Ankle over knee, lean slightly forward. Hold 45 sec each side.'},
+    {id:'hammy',      icon:'🦿', name:'Hamstring Stretch',       hh:12, mm:52, dur:'3 min',  tag:'daily',     desc:'Heel on chair, keep leg straight, hinge at hip. 30 sec each side.'},
   ]},
-  { id:'evening', name:'Evening', icon:'🌆', timeRange:[18*60, 20*60], label:'18:00–20:00', tasks:[
-    { id:'mckenzie',    icon:'💪', name:'McKenzie Press-Up',       hh:18, mm:0,  dur:'10 min', tag:'critical',  desc:'Lie face-down. Hands under shoulders. Press upper body UP, hips on floor. Hold 2 sec. 10 reps × 3 sets. Most important exercise for your disc herniation.' },
-    { id:'nerve-fls',   icon:'⚡', name:'Sciatic Nerve Flossing',  hh:18, mm:14, dur:'5 min',  tag:'critical',  desc:'Sit on chair edge. Extend leg straight, point toes to you, hold 2 sec, bend back in. 15 reps each side.' },
-    { id:'side-leg',    icon:'🦵', name:'Side-Lying Leg Raises',   hh:18, mm:21, dur:'5 min',  tag:'important', desc:'Lie on side. Raise top leg 30 cm, hold 2 sec, lower. 15 reps each side.' },
-    { id:'part-crunch', icon:'🏋️', name:'Partial Crunches',        hh:18, mm:28, dur:'5 min',  tag:'important', desc:'Shoulders only off the floor — NOT full sit-ups. 15 reps.' },
-    { id:'eve-walk',    icon:'🌇', name:'Evening Walk',            hh:18, mm:40, dur:'15 min', tag:'important', desc:'Relaxed pace. Avoid hills initially. Second walk of the day.' },
+  { id:'evening', name:'Evening', icon:'🌆', start:18*60, end:20*60, label:'18:00–20:00', tasks:[
+    {id:'mckenzie',   icon:'💪', name:'McKenzie Press-Up',       hh:18, mm:0,  dur:'10 min', tag:'critical',  desc:'Lie face-down. Hands under shoulders. Press upper body UP, hips on floor. 10 reps × 3 sets. KEY exercise for disc herniation.'},
+    {id:'nerve-fls',  icon:'⚡', name:'Sciatic Nerve Flossing',  hh:18, mm:14, dur:'5 min',  tag:'critical',  desc:'Sit on chair edge. Extend leg, point toes to you, hold 2 sec, bend back. 15 reps each side.'},
+    {id:'side-leg',   icon:'🦵', name:'Side-Lying Leg Raises',   hh:18, mm:21, dur:'5 min',  tag:'important', desc:'Lie on side. Raise top leg 30 cm, hold 2 sec, lower. 15 reps each side.'},
+    {id:'part-crunch',icon:'🏋️', name:'Partial Crunches',        hh:18, mm:28, dur:'5 min',  tag:'important', desc:'Shoulders only off the floor — NOT full sit-ups. 15 reps.'},
+    {id:'eve-walk',   icon:'🌇', name:'Evening Walk',            hh:18, mm:40, dur:'15 min', tag:'important', desc:'Relaxed pace. Avoid hills initially. Second walk of the day.'},
   ]},
-  { id:'night', name:'Before Bed', icon:'🌙', timeRange:[21*60, 22*60+30], label:'21:00–22:30', tasks:[
-    { id:'supine-tw',   icon:'🌀', name:'Supine Spinal Twist',     hh:21, mm:0,  dur:'3 min',  tag:'daily',     desc:'Lie on back. Bring knee across body. Shoulders flat. Hold 30 sec each side.' },
-    { id:'child-pose',  icon:'🧘', name:"Child's Pose",            hh:21, mm:5,  dur:'2 min',  tag:'daily',     desc:'Kneel, sit back on heels, stretch arms forward. Hold 60 sec. Breathe slowly.' },
-    { id:'legs-wall',   icon:'🪜', name:'Legs Up the Wall',        hh:21, mm:8,  dur:'5 min',  tag:'important', desc:'Lie with legs straight up a wall for 5 full minutes. Best disc decompression.' },
-    { id:'sleep',       icon:'😴', name:'Sleep on Side + Pillow',  hh:22, mm:0,  dur:'Night',  tag:'daily',     desc:'Pillow between knees when lying on side. Keeps spine neutral all night.' },
+  { id:'night', name:'Before Bed', icon:'🌙', start:21*60, end:22*60+30, label:'21:00–22:30', tasks:[
+    {id:'supine-tw',  icon:'🌀', name:'Supine Spinal Twist',     hh:21, mm:0,  dur:'3 min', tag:'daily',     desc:'Lie on back. Bring knee across body. Shoulders flat. Hold 30 sec each side.'},
+    {id:'child-pose', icon:'🧘', name:"Child's Pose",            hh:21, mm:5,  dur:'2 min', tag:'daily',     desc:'Kneel, sit back on heels, stretch arms forward. Hold 60 sec. Breathe slowly.'},
+    {id:'legs-wall',  icon:'🪜', name:'Legs Up the Wall',        hh:21, mm:8,  dur:'5 min', tag:'important', desc:'Lie with legs straight up a wall for 5 minutes. Best disc decompression.'},
+    {id:'sleep',      icon:'😴', name:'Sleep on Side + Pillow',  hh:22, mm:0,  dur:'Night', tag:'daily',     desc:'Pillow between knees when lying on side. Keeps spine neutral all night.'},
   ]},
 ];
+const ALL = PERIODS.flatMap(p=>p.tasks);
 
-const ALL_TASKS = PERIODS.flatMap(p => p.tasks);
-
-// ── time helpers ──
-const nowMins = () => { const n=new Date(); return n.getHours()*60+n.getMinutes(); };
-const taskMins = t => t.hh*60+t.mm;
-const fmtHHMM = t => String(t.hh).padStart(2,'0')+':'+String(t.mm).padStart(2,'0');
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // STORAGE
-// ══════════════════════════════════════════
-const todayKey = () => new Date().toISOString().slice(0,10);
-function load(){ try{ return JSON.parse(localStorage.getItem('sg4')||'{}'); }catch{ return {}; } }
-function save(s){ localStorage.setItem('sg4',JSON.stringify(s)); }
-function todayDone(){ return load()[todayKey()]||{}; }
+// ════════════════════════════════════
+const dayKey = () => new Date().toISOString().slice(0,10);
+const load = () => { try{ return JSON.parse(localStorage.getItem('sg5')||'{}'); }catch{ return {}; } };
+const save = s => localStorage.setItem('sg5', JSON.stringify(s));
+const getDone = () => load()[dayKey()] || {};
 
-function toggle(id){
-  const s=load(), k=todayKey();
+function toggle(id) {
+  const s=load(), k=dayKey();
   if(!s[k]) s[k]={};
-  const was=s[k][id];
-  s[k][id]=!was;
+  const was = s[k][id];
+  s[k][id] = !was;
   save(s);
   render();
-  toast(was?'Unchecked':'Nice work!',was?'warn':'ok');
+  showToast(was ? 'Unchecked' : 'Nice work! 💪', was ? 'warn' : 'ok');
 }
-function resetDay(){
+function resetDay() {
   if(!confirm('Reset all of today\'s habits?')) return;
-  const s=load(); delete s[todayKey()]; save(s);
-  render(); toast('Reset','warn');
+  const s=load(); delete s[dayKey()]; save(s);
+  render(); showToast('Reset done','warn');
 }
 
-// ══════════════════════════════════════════
-// TASK STATE HELPERS
-// ══════════════════════════════════════════
-// A task is "past" if current time is > task time + grace (20 min)
-const GRACE = 20;
-function isPast(task){
-  if(task.dur==='Night') return false;
-  return nowMins() > taskMins(task) + GRACE;
-}
-function isNow(task){
-  const nm=nowMins(), tm=taskMins(task);
-  return nm >= tm && nm <= tm + GRACE;
-}
-function isFuture(task){ return nowMins() < taskMins(task); }
+// ════════════════════════════════════
+// TIME HELPERS
+// ════════════════════════════════════
+const getNow = () => { const n=new Date(); return n.getHours()*60+n.getMinutes(); };
+const tMins  = t => t.hh*60+t.mm;
+const fmt    = t => String(t.hh).padStart(2,'0')+':'+String(t.mm).padStart(2,'0');
+const GRACE  = 25; // minutes after task time it's still "now"
 
-// Which period is currently active?
-function activePeriod(){
-  const nm=nowMins();
-  return PERIODS.find(p=> nm >= p.timeRange[0] && nm <= p.timeRange[1]) || null;
-}
+const isPast   = t => t.dur!=='Night' && getNow() > tMins(t)+GRACE;
+const isNow    = t => { const d=getNow()-tMins(t); return d>=0&&d<=GRACE; };
+const isFuture = t => getNow() < tMins(t);
 
-// Next undone future task
-function nextTask(){
-  const done=todayDone();
-  const nm=nowMins();
-  return ALL_TASKS
-    .filter(t=> !done[t.id] && taskMins(t) > nm && t.dur!=='Night')
-    .sort((a,b)=> taskMins(a)-taskMins(b))[0] || null;
-}
+const activePeriod = () => { const n=getNow(); return PERIODS.find(p=>n>=p.start&&n<=p.end)||null; };
+const getCurrentTask = () => { const done=getDone(); return ALL.find(t=>!done[t.id]&&isNow(t))||null; };
+const getNextTask    = () => { const done=getDone(); const n=getNow(); return ALL.filter(t=>!done[t.id]&&tMins(t)>n&&t.dur!=='Night').sort((a,b)=>tMins(a)-tMins(b))[0]||null; };
 
-// Current task = closest non-done task within grace window
-function currentTask(){
-  const done=todayDone();
-  return ALL_TASKS.find(t=> !done[t.id] && isNow(t)) || null;
-}
-
-// ══════════════════════════════════════════
-// CLOCK
-// ══════════════════════════════════════════
-function updateClock(){
-  const n=new Date();
-  const h=String(n.getHours()).padStart(2,'0');
-  const m=String(n.getMinutes()).padStart(2,'0');
-  document.getElementById('clock').textContent=h+':'+m;
+// ════════════════════════════════════
+// CLOCK — updates every second
+// ════════════════════════════════════
+function updateClock() {
+  const n = new Date();
+  const h = String(n.getHours()).padStart(2,'0');
+  const m = String(n.getMinutes()).padStart(2,'0');
+  const s = String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = h+':'+m+':'+s;
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('clock-date').textContent=
+  document.getElementById('clock-date').textContent =
     days[n.getDay()]+', '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();
 }
 
-// ══════════════════════════════════════════
-// COUNTDOWN
-// ══════════════════════════════════════════
-function updateCountdown(){
-  const next = nextTask();
-  const nameEl = document.getElementById('cd-task-name');
+// ════════════════════════════════════
+// COUNTDOWN — updates every 30s
+// ════════════════════════════════════
+function updateCountdown() {
+  const taskEl = document.getElementById('cd-task');
   const timeEl = document.getElementById('cd-time');
-  const row = document.getElementById('countdown-row');
-
-  // Also check if there's a current task (happening now)
-  const cur = currentTask();
-  if(cur){
-    nameEl.textContent = cur.icon+' '+cur.name;
+  const cur = getCurrentTask();
+  if(cur) {
+    taskEl.textContent = cur.icon+' '+cur.name;
     timeEl.textContent = 'NOW';
-    timeEl.className = 'cd-time now';
+    timeEl.className = 'cd-time now-color';
     return;
   }
-
-  if(!next){ nameEl.textContent='All done for today!'; timeEl.textContent='✓'; timeEl.className='cd-time now'; return; }
-
-  const nm=nowMins(), tm=taskMins(next);
-  const diffMins=tm-nm;
-  const h=Math.floor(diffMins/60), m=diffMins%60;
-  nameEl.textContent=next.icon+' '+next.name;
-
-  if(diffMins<=15){
-    timeEl.textContent='in '+diffMins+'m';
-    timeEl.className='cd-time urgent';
-  } else if(h>0){
-    timeEl.textContent='in '+h+'h '+m+'m';
-    timeEl.className='cd-time';
-  } else {
-    timeEl.textContent='in '+m+'m';
-    timeEl.className='cd-time';
+  const next = getNextTask();
+  if(!next) {
+    taskEl.textContent = 'All tasks done today!';
+    timeEl.textContent = '✓';
+    timeEl.className = 'cd-time now-color';
+    return;
   }
+  const diff = tMins(next) - getNow();
+  const hh = Math.floor(diff/60), mm = diff%60;
+  taskEl.textContent = next.icon+' '+next.name;
+  timeEl.className = diff<=15 ? 'cd-time urgent' : 'cd-time';
+  timeEl.textContent = hh>0 ? 'in '+hh+'h '+mm+'m' : 'in '+mm+'m';
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // RENDER NOW TASK
-// ══════════════════════════════════════════
-function renderNowTask(){
-  const done=todayDone();
-  const cur=currentTask();
-  const wrap=document.getElementById('now-task-wrap');
-  if(!cur){
-    const next=nextTask();
-    if(next){
-      wrap.innerHTML=`<div class="now-rest">Next: ${next.icon} ${next.name} at ${fmtHHMM(next)}</div>`;
-    } else {
-      wrap.innerHTML=`<div class="now-rest">All done for now — great work! 🎉</div>`;
-    }
+// ════════════════════════════════════
+function renderNowTask() {
+  const done = getDone();
+  const cur = getCurrentTask();
+  const wrap = document.getElementById('now-wrap');
+  if(!cur) {
+    const next = getNextTask();
+    wrap.innerHTML = next
+      ? `<div class="now-rest">Next: ${next.icon} ${next.name} at ${fmt(next)}</div>`
+      : `<div class="now-rest">All done for today — great work! 🎉</div>`;
     return;
   }
-  const isDone=done[cur.id];
-  wrap.innerHTML=`
+  const isDone = done[cur.id];
+  wrap.innerHTML = `
     <div class="now-task ${isDone?'done':''}" onclick="toggle('${cur.id}')">
       <span class="now-icon">${cur.icon}</span>
       <div class="now-info">
-        <div class="now-name ${isDone?'done-text':''}">${cur.name}</div>
-        <div class="now-meta">${fmtHHMM(cur)} · ${cur.dur}</div>
+        <div class="now-name ${isDone?'striked':''}">${cur.name}</div>
+        <div class="now-meta">${fmt(cur)} · ${cur.dur}</div>
       </div>
       <div class="now-check ${isDone?'checked':''}">✓</div>
     </div>`;
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // RENDER PROGRESS
-// ══════════════════════════════════════════
-function renderProgress(){
-  const done=todayDone();
-  const total=ALL_TASKS.length;
-  const comp=ALL_TASKS.filter(t=>done[t.id]).length;
-  const pct=total?Math.round(comp/total*100):0;
-  document.getElementById('progress-count').textContent=comp+' / '+total;
-  document.getElementById('progress-fill').style.width=pct+'%';
+// ════════════════════════════════════
+function renderProgress() {
+  const done = getDone();
+  const comp = ALL.filter(t=>done[t.id]).length;
+  const pct  = Math.round(comp/ALL.length*100);
+  document.getElementById('prog-count').textContent = comp+' / '+ALL.length;
+  document.getElementById('prog-fill').style.width  = pct+'%';
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // RENDER TIMELINE
-// ══════════════════════════════════════════
-function renderTimeline(){
-  const done=todayDone();
-  const cur=currentTask();
-  const active=activePeriod();
-  const wrap=document.getElementById('timeline-wrap');
-  wrap.innerHTML='';
+// ════════════════════════════════════
+function renderTimeline() {
+  const done   = getDone();
+  const cur    = getCurrentTask();
+  const active = activePeriod();
+  const wrap   = document.getElementById('timeline-wrap');
+  wrap.innerHTML = '';
 
-  PERIODS.forEach((period,pi)=>{
-    const pDone=period.tasks.filter(t=>done[t.id]).length;
-    const isActivePeriod = active && active.id===period.id;
+  PERIODS.forEach(period => {
+    const pDone = period.tasks.filter(t=>done[t.id]).length;
+    const isActive = active && active.id===period.id;
+    const isPastPeriod = getNow() > period.end;
+    const allDone = pDone===period.tasks.length;
 
-    // Is the entire period in the past?
-    const nm=nowMins();
-    const isPastPeriod = nm > period.timeRange[1];
-
-    const pdiv=document.createElement('div');
-    pdiv.className='period-wrap';
-
-    // Period header
-    const headClass = isActivePeriod ? 'active-period' : (isPastPeriod && !isActivePeriod ? 'past-period' : '');
-    const allPDone = pDone===period.tasks.length;
-    pdiv.innerHTML=`
-      <div class="period-head ${headClass}">
-        <span class="period-icon-h">${period.icon}</span>
-        <span class="period-name-h">${period.name}</span>
-        ${isActivePeriod?'<span class="now-badge">NOW</span>':''}
-        <span class="period-time-h">${period.label}</span>
-        <span class="period-prog-h" style="color:${allPDone?'var(--green)':''}">${pDone}/${period.tasks.length}</span>
+    const pdiv = document.createElement('div');
+    pdiv.className = 'period-wrap';
+    pdiv.innerHTML = `
+      <div class="period-head ${isActive?'active-period':isPastPeriod?'past-period':''}">
+        <span class="p-icon">${period.icon}</span>
+        <span class="p-name">${period.name}</span>
+        ${isActive?'<span class="p-now-badge">NOW</span>':''}
+        <span class="p-time">${period.label}</span>
+        <span class="p-prog" style="color:${allDone?'var(--green)':''}">${pDone}/${period.tasks.length}</span>
       </div>
       <div class="task-group" id="grp-${period.id}"></div>`;
-
     wrap.appendChild(pdiv);
 
-    const grp=pdiv.querySelector(`#grp-${period.id}`);
-    period.tasks.forEach((task,ti)=>{
-      const isDone=done[task.id];
-      const isCurrentNow=cur&&cur.id===task.id;
-      const taskPast=isPast(task);
-      const taskMissed=taskPast&&!isDone;
+    const grp = pdiv.querySelector('#grp-'+period.id);
+    period.tasks.forEach((task, ti) => {
+      const isDone   = done[task.id];
+      const isNowT   = cur && cur.id===task.id;
+      const missed   = isPast(task) && !isDone;
 
-      let rowClass='task-row';
-      if(isDone) rowClass+=' done';
-      else if(isCurrentNow) rowClass+=' current-now';
-      else if(taskMissed) rowClass+=' past-missed';
+      let cls = 'task-row';
+      if(isDone)   cls += ' t-done';
+      else if(isNowT) cls += ' t-now';
+      else if(missed) cls += ' t-missed';
 
-      const div=document.createElement('div');
-      div.className=rowClass;
-      div.style.animationDelay=(ti*0.04)+'s';
-
-      div.innerHTML=`
+      const div = document.createElement('div');
+      div.className = cls;
+      div.style.animationDelay = (ti*.04)+'s';
+      div.innerHTML = `
         <span class="t-icon">${task.icon}</span>
         <div class="t-body">
-          <div class="t-name ${isDone?'done-text':taskMissed?'missed-text':''}">${task.name}</div>
-          <div class="t-sub">${fmtHHMM(task)} · ${task.dur}</div>
+          <div class="t-name ${isDone?'done-txt':missed?'missed-txt':''}">${task.name}</div>
+          <div class="t-sub">${fmt(task)} · ${task.dur}</div>
           <div class="t-desc">${task.desc}</div>
         </div>
         <div class="t-right">
-          ${taskMissed?'<span class="missed-chip">missed</span>':'<span class="t-badge badge-'+task.tag+'">'+task.tag+'</span>'}
+          ${missed?'<span class="missed-chip">missed</span>':'<span class="t-badge badge-'+task.tag+'">'+task.tag+'</span>'}
           <div class="t-check ${isDone?'checked':''}">✓</div>
         </div>`;
 
-      // tap = toggle, long-press = show desc
-      let pressTimer;
-      div.addEventListener('touchstart',()=>{ pressTimer=setTimeout(()=>div.classList.toggle('expanded'),400); },{passive:true});
-      div.addEventListener('touchend',()=>clearTimeout(pressTimer));
-      div.addEventListener('click',()=>{ if(!div.classList.contains('expanded')) toggle(task.id); });
+      let press;
+      div.addEventListener('touchstart', ()=>{ press=setTimeout(()=>div.classList.toggle('expanded'),400); },{passive:true});
+      div.addEventListener('touchend',   ()=>clearTimeout(press));
+      div.addEventListener('click',      ()=>{ if(!div.classList.contains('expanded')) toggle(task.id); });
       grp.appendChild(div);
     });
   });
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // STREAK
-// ══════════════════════════════════════════
-function renderStreak(){
+// ════════════════════════════════════
+function renderStreak() {
   const s=load(); let streak=0; const n=new Date();
   for(let i=0;i<365;i++){
     const d=new Date(n); d.setDate(d.getDate()-i);
     const k=d.toISOString().slice(0,10);
-    const comp=ALL_TASKS.filter(t=>(s[k]||{})[t.id]).length;
-    if(comp>=Math.floor(ALL_TASKS.length*.5)) streak++;
+    const comp=ALL.filter(t=>(s[k]||{})[t.id]).length;
+    if(comp>=Math.floor(ALL.length*.5)) streak++;
     else if(i>0) break;
   }
   document.getElementById('streak-num').textContent=streak;
   return streak;
 }
 
-// ══════════════════════════════════════════
-// NOTIFICATIONS — fire at exact task time
-// ══════════════════════════════════════════
-const notifiedToday = new Set();
+// ════════════════════════════════════
+// NOTIFICATIONS — FIXED
+// The key fix: use the synchronous-style call pattern
+// that works reliably across browsers on HTTPS
+// ════════════════════════════════════
+const firedToday = new Set();
 
-function checkNotifications(){
-  if(Notification.permission!=='granted') return;
-  const done=todayDone();
-  const n=new Date();
-  const nm=n.getHours()*60+n.getMinutes();
+function updateNotifUI() {
+  const statusEl = document.getElementById('notif-status');
+  const btnEl    = document.getElementById('notif-btn');
+  const descEl   = document.getElementById('notif-desc');
+  const stepsEl  = document.getElementById('notif-steps');
 
-  ALL_TASKS.forEach(task=>{
-    const tm=taskMins(task);
-    const notifKey=todayKey()+'-'+task.id;
-    if(nm===tm && !done[task.id] && !notifiedToday.has(notifKey)){
-      notifiedToday.add(notifKey);
-      new Notification('SpineGuard — Time to move! 🦴',{
+  if(!('Notification' in window)) {
+    statusEl.textContent='Not supported';
+    statusEl.className='notif-status blocked';
+    descEl.textContent='Your browser does not support notifications. Use Chrome on desktop or Android.';
+    btnEl.classList.add('hidden');
+    return;
+  }
+
+  const perm = Notification.permission;
+
+  if(perm === 'granted') {
+    statusEl.textContent='ON';
+    statusEl.className='notif-status on';
+    descEl.textContent='You will be notified at the exact time of each exercise. Critical tasks also get a 5-min warning.';
+    btnEl.classList.add('hidden');
+    stepsEl.textContent='';
+    document.getElementById('notif-card').style.borderColor='var(--green-bd)';
+  } else if(perm === 'denied') {
+    statusEl.textContent='BLOCKED';
+    statusEl.className='notif-status blocked';
+    descEl.textContent='Notifications are blocked for this site. You need to unblock them manually in your browser settings.';
+    btnEl.textContent='How to unblock';
+    btnEl.className='notif-btn blocked-btn';
+    stepsEl.innerHTML =
+      '1. Click the 🔒 lock icon in your browser address bar<br>'+
+      '2. Find "Notifications" and change to "Allow"<br>'+
+      '3. Refresh this page';
+  } else {
+    // default — not asked yet
+    statusEl.textContent='OFF';
+    statusEl.className='notif-status off';
+    descEl.textContent='Get notified at the exact time of each exercise. Tap below to enable.';
+    btnEl.textContent='Enable Notifications';
+    btnEl.className='notif-btn enable';
+    stepsEl.textContent='';
+  }
+}
+
+// THE FIX: call requestPermission directly inside a click handler
+// do NOT wrap in async/await — some browsers block that
+function enableNotifications() {
+  if(!('Notification' in window)) {
+    showToast('Not supported in this browser','warn');
+    return;
+  }
+  if(Notification.permission === 'denied') {
+    showToast('Unblock in browser settings first','warn');
+    return;
+  }
+  if(Notification.permission === 'granted') {
+    showToast('Already enabled!','ok');
+    return;
+  }
+
+  // Direct call — must happen synchronously inside user gesture
+  const result = Notification.requestPermission(function(perm) {
+    // callback style — works in older browsers
+    updateNotifUI();
+    if(perm === 'granted') {
+      showToast('Reminders enabled!','ok');
+      // Send a test notification immediately
+      setTimeout(()=>{
+        new Notification('SpineGuard is ready! 🦴',{
+          body:'You\'ll be notified at each exercise time.',
+        });
+      }, 500);
+    } else {
+      showToast('Permission denied','warn');
+    }
+  });
+
+  // Promise style — works in modern browsers
+  if(result && typeof result.then === 'function') {
+    result.then(function(perm) {
+      updateNotifUI();
+      if(perm === 'granted') {
+        showToast('Reminders enabled!','ok');
+        setTimeout(()=>{
+          new Notification('SpineGuard is ready! 🦴',{
+            body:'You\'ll be notified at each exercise time.',
+          });
+        }, 500);
+      } else {
+        showToast('Permission denied','warn');
+      }
+    });
+  }
+}
+
+// Check and fire notifications every minute
+function checkNotifications() {
+  if(Notification.permission !== 'granted') return;
+  const done = getDone();
+  const n    = new Date();
+  const nm   = n.getHours()*60+n.getMinutes();
+
+  ALL.forEach(task => {
+    const tm = tMins(task);
+    const key = dayKey()+':'+task.id;
+    const warnKey = key+':warn';
+
+    // Fire at exact time
+    if(nm === tm && !done[task.id] && !firedToday.has(key)) {
+      firedToday.add(key);
+      new Notification('SpineGuard — Move now! 🦴', {
         body: task.icon+' '+task.name+' ('+task.dur+')',
-        tag: notifKey,
+        tag: key,
+        requireInteraction: false,
       });
     }
-    // 5-min warning
-    const warnKey=notifKey+'-warn';
-    if(nm===tm-5 && !done[task.id] && !notifiedToday.has(warnKey) && task.tag==='critical'){
-      notifiedToday.add(warnKey);
-      new Notification('SpineGuard — 5 min warning ⏰',{
+
+    // 5-min warning for critical tasks
+    if(nm === tm-5 && !done[task.id] && task.tag==='critical' && !firedToday.has(warnKey)) {
+      firedToday.add(warnKey);
+      new Notification('SpineGuard — 5 min warning ⏰', {
         body: 'Coming up: '+task.icon+' '+task.name,
         tag: warnKey,
       });
@@ -663,67 +703,57 @@ function checkNotifications(){
   });
 }
 
-function askNotif(){
-  if(!('Notification' in window)) return;
-  Notification.requestPermission().then(p=>{
-    if(p==='granted'){
-      document.getElementById('notif-bar').style.display='none';
-      toast('Reminders on — you\'ll be notified at each exercise time!','ok');
-    }
-  });
-}
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // STAND TIMER
-// ══════════════════════════════════════════
-let standSecs=1800,standRunning=false,standInv=null;
+// ════════════════════════════════════
+let standSecs=1800, standOn=false, standInt=null;
 function updateStandDisplay(){
-  const m=Math.floor(standSecs/60),s=standSecs%60;
+  const m=Math.floor(standSecs/60), s=standSecs%60;
   document.getElementById('stand-time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 function toggleStand(){
   const btn=document.getElementById('stand-btn');
-  if(standRunning){
-    clearInterval(standInv);standRunning=false;standSecs=1800;
-    updateStandDisplay();btn.textContent='Start';btn.classList.remove('running');
+  if(standOn){
+    clearInterval(standInt); standOn=false; standSecs=1800;
+    updateStandDisplay(); btn.textContent='Start'; btn.classList.remove('running');
   } else {
-    standRunning=true;btn.textContent='Stop';btn.classList.add('running');
-    standInv=setInterval(()=>{
-      standSecs--;updateStandDisplay();
+    standOn=true; btn.textContent='Stop'; btn.classList.add('running');
+    standInt=setInterval(()=>{
+      standSecs--;
+      updateStandDisplay();
       if(standSecs<=0){
-        clearInterval(standInv);standRunning=false;standSecs=1800;
-        updateStandDisplay();btn.textContent='Start';btn.classList.remove('running');
-        toast('Stand up! Walk for 2 minutes 🧍','warn');
+        clearInterval(standInt); standOn=false; standSecs=1800;
+        updateStandDisplay(); btn.textContent='Start'; btn.classList.remove('running');
+        showToast('Stand up! Walk 2 minutes 🧍','warn');
         if(Notification.permission==='granted')
-          new Notification('SpineGuard',{body:'30 min up — stand and walk for 2 minutes!'});
+          new Notification('SpineGuard',{body:'30 min up — stand and walk!'});
       }
     },1000);
   }
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // HISTORY
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 function renderHistory(){
-  const s=load(); const n=new Date();
-  const dayNames=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  const today=todayKey();
+  const s=load(), n=new Date(), today=dayKey();
+  const dnames=['Su','Mo','Tu','We','Th','Fr','Sa'];
   const strip=document.getElementById('week-strip');
   strip.innerHTML='';
   for(let i=6;i>=0;i--){
-    const d=new Date(n);d.setDate(d.getDate()-i);
+    const d=new Date(n); d.setDate(d.getDate()-i);
     const k=d.toISOString().slice(0,10);
-    const comp=ALL_TASKS.filter(t=>(s[k]||{})[t.id]).length;
-    const pct=Math.round(comp/ALL_TASKS.length*100);
+    const comp=ALL.filter(t=>(s[k]||{})[t.id]).length;
+    const pct=Math.round(comp/ALL.length*100);
     const cls=comp===0?'':(pct>=70?'great':pct>=40?'good':'poor');
     const col=comp===0?'var(--text3)':(pct>=70?'var(--green)':pct>=40?'var(--blue)':'var(--red)');
     strip.innerHTML+=`<div class="day-cell ${cls} ${k===today?'today':''}">
-      <span class="dn">${dayNames[d.getDay()]}</span>
+      <span class="dn">${dnames[d.getDay()]}</span>
       <span class="dp" style="color:${col}">${comp>0?pct+'%':'–'}</span></div>`;
   }
   const allKeys=Object.keys(s);
   let total=0,best=0;
-  allKeys.forEach(k=>{ const c=ALL_TASKS.filter(t=>s[k][t.id]).length; total+=c; if(c>best)best=c; });
+  allKeys.forEach(k=>{ const c=ALL.filter(t=>s[k][t.id]).length; total+=c; if(c>best)best=c; });
   const streak=renderStreak();
   document.getElementById('stat-row').innerHTML=`
     <div class="stat-box"><div class="stat-val g">${streak}</div><div class="stat-lbl">Day streak</div></div>
@@ -732,19 +762,19 @@ function renderHistory(){
     <div class="stat-box"><div class="stat-val r">${best}</div><div class="stat-lbl">Best day</div></div>`;
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // TOAST
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 let toastT;
-function toast(msg,type='ok'){
+function showToast(msg, type='ok'){
   const el=document.getElementById('toast');
-  el.textContent=msg;el.className=`toast ${type} show`;
-  clearTimeout(toastT);toastT=setTimeout(()=>{ el.className='toast'; },2500);
+  el.textContent=msg; el.className=`toast ${type} show`;
+  clearTimeout(toastT); toastT=setTimeout(()=>{ el.className='toast'; },2500);
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // TABS
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 function tab(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
@@ -753,9 +783,9 @@ function tab(name){
   if(name==='history') renderHistory();
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // MASTER RENDER
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 function render(){
   renderNowTask();
   updateCountdown();
@@ -764,35 +794,24 @@ function render(){
   renderStreak();
 }
 
-// ══════════════════════════════════════════
-// PWA MANIFEST
-// ══════════════════════════════════════════
-const mf={name:"SpineGuard",short_name:"SpineGuard",start_url:".",display:"standalone",
-  background_color:"#f7f7f5",theme_color:"#1a1a18",
-  icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦴</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
-const blob=new Blob([JSON.stringify(mf)],{type:'application/json'});
-document.getElementById('manifest-link').href=URL.createObjectURL(blob);
-
-// ══════════════════════════════════════════
-// INIT & INTERVALS
-// ══════════════════════════════════════════
-if(Notification.permission==='granted')
-  document.getElementById('notif-bar').style.display='none';
-
-// Clock — every 10s
-setInterval(updateClock,10000);
-
-// Countdown — every 30s
-setInterval(updateCountdown,30000);
-
-// Full re-render every minute (catches period changes, missed tasks, now-task changes)
-setInterval(()=>{ render(); },60000);
-
-// Notification check — every minute
-setInterval(checkNotifications,60000);
-
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+updateNotifUI(); // show correct notif state on load
 updateClock();
 render();
+
+// Clock every second
+setInterval(updateClock, 1000);
+
+// Countdown every 30 seconds
+setInterval(updateCountdown, 30000);
+
+// Full re-render every minute (catches period changes, missed tasks)
+setInterval(render, 60000);
+
+// Notification check every minute
+setInterval(checkNotifications, 60000);
 </script>
 </body>
 </html>
